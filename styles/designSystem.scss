@@ -1,0 +1,199 @@
+// Design System - Colors, Spacing, Typography, and Common Variables
+
+// Color Palette
+:root {
+  // Light Theme Colors
+  --primary-orange: #ffa116;
+  --primary-orange-hover: #ff8c00;
+  --primary-blue: #007acc;
+  --primary-green: #00af9b;
+  --primary-purple: #8b5cf6;
+  
+  // Background Colors
+  --background-primary: #ffffff;
+  --background-secondary: #f8f9fa;
+  --background-tertiary: #f1f2f3;
+  --background-card: #ffffff;
+  --background-hover: #f5f5f5;
+  
+  // Text Colors
+  --text-primary: #2c3e50;
+  --text-secondary: #6c757d;
+  --text-tertiary: #adb5bd;
+  --text-white: #ffffff;
+  --text-link: #007acc;
+  --text-link-hover: #005a9e;
+  
+  // Border Colors
+  --border-primary: #e9ecef;
+  --border-secondary: #dee2e6;
+  --border-focus: #007acc;
+  
+  // Status Colors
+  --success: #28a745;
+  --warning: #ffc107;
+  --error: #dc3545;
+  --info: #17a2b8;
+  
+  // Difficulty Colors
+  --difficulty-easy: #00af9b;
+  --difficulty-medium: #ffa116;
+  --difficulty-hard: #ff375f;
+  
+  // Shadow
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+}
+
+// Dark Theme Colors
+[data-theme="dark"] {
+  --background-primary: #1a1a1a;
+  --background-secondary: #2d2d2d;
+  --background-tertiary: #3a3a3a;
+  --background-card: #262626;
+  --background-hover: #333333;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --text-tertiary: #808080;
+  --text-link: #4da6ff;
+  --text-link-hover: #66b3ff;
+  
+  --border-primary: #404040;
+  --border-secondary: #4d4d4d;
+  
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.3);
+}
+
+// Typography Scale
+$font-sizes: (
+  xs: 0.75rem,    // 12px
+  sm: 0.875rem,   // 14px
+  base: 1rem,     // 16px
+  lg: 1.125rem,   // 18px
+  xl: 1.25rem,    // 20px
+  2xl: 1.5rem,    // 24px
+  3xl: 1.875rem,  // 30px
+  4xl: 2.25rem,   // 36px
+  5xl: 3rem       // 48px
+);
+
+// Font Weights
+$font-weights: (
+  light: 300,
+  normal: 400,
+  medium: 500,
+  semibold: 600,
+  bold: 700,
+  extrabold: 800
+);
+
+// Line Heights
+$line-heights: (
+  tight: 1.25,
+  normal: 1.5,
+  relaxed: 1.75
+);
+
+// Spacing Scale (based on 4px grid)
+$spacing: (
+  0: 0,
+  1: 0.25rem,   // 4px
+  2: 0.5rem,    // 8px
+  3: 0.75rem,   // 12px
+  4: 1rem,      // 16px
+  5: 1.25rem,   // 20px
+  6: 1.5rem,    // 24px
+  8: 2rem,      // 32px
+  10: 2.5rem,   // 40px
+  12: 3rem,     // 48px
+  16: 4rem,     // 64px
+  20: 5rem,     // 80px
+  24: 6rem      // 96px
+);
+
+// Border Radius
+$border-radius: (
+  none: 0,
+  sm: 0.125rem,   // 2px
+  base: 0.25rem,  // 4px
+  md: 0.375rem,   // 6px
+  lg: 0.5rem,     // 8px
+  xl: 0.75rem,    // 12px
+  2xl: 1rem,      // 16px
+  full: 9999px
+);
+
+// Breakpoints
+$breakpoints: (
+  sm: 640px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1280px,
+  2xl: 1536px
+);
+
+// Z-index Scale
+$z-index: (
+  dropdown: 1000,
+  sticky: 1020,
+  fixed: 1030,
+  modal-backdrop: 1040,
+  modal: 1050,
+  popover: 1060,
+  tooltip: 1070
+);
+
+// Animation Durations
+$durations: (
+  fast: 150ms,
+  normal: 300ms,
+  slow: 500ms
+);
+
+// Common Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin button-reset {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+@mixin card {
+  background-color: var(--background-card);
+  border: 1px solid var(--border-primary);
+  border-radius: map-get($border-radius, lg);
+  box-shadow: var(--shadow-sm);
+}
+
+// Responsive Mixins
+@mixin respond-to($breakpoint) {
+  @media (min-width: map-get($breakpoints, $breakpoint)) {
+    @content;
+  }
+}

@@ -1,0 +1,145 @@
+.codeEditor {
+    position: relative;
+    height: 100%;
+    display: flex;
+    background-color: var(--editor-background);
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.lineNumbers {
+    width: 50px;
+    background-color: var(--line-numbers-background);
+    border-right: 1px solid var(--border);
+    padding: 16px 0;
+    user-select: none;
+    text-align: right;
+    color: var(--line-numbers-text);
+    font-size: 12px;
+    
+    .lineNumber {
+        padding: 0 8px;
+        height: 20px;
+        line-height: 20px;
+        color: var(--line-numbers-text);
+    }
+}
+
+.codeArea {
+    flex: 1;
+    position: relative;
+    
+    .codeTextarea {
+        width: 100%;
+        height: 100%;
+        padding: 16px 20px;
+        border: none;
+        outline: none;
+        background-color: transparent;
+        color: var(--editor-text);
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        resize: none;
+        tab-size: 4;
+        
+        &::placeholder {
+            color: var(--editor-placeholder);
+        }
+        
+        // Scrollbar styling
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        &::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+        }
+        
+        &::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 4px;
+            
+            &:hover {
+                background: var(--scrollbar-thumb-hover);
+            }
+        }
+    }
+}
+
+.cursorPosition {
+    position: absolute;
+    bottom: 8px;
+    right: 16px;
+    font-size: 12px;
+    color: var(--editor-text-secondary);
+    background-color: var(--editor-background);
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+}
+
+// CSS Variables for theming
+:root {
+    --editor-background: #ffffff;
+    --line-numbers-background: #f8f9fa;
+    --line-numbers-text: #6c757d;
+    --editor-text: #212529;
+    --editor-text-secondary: #6c757d;
+    --editor-placeholder: #adb5bd;
+    --scrollbar-track: #f8f9fa;
+    --scrollbar-thumb: #dee2e6;
+    --scrollbar-thumb-hover: #adb5bd;
+}
+
+[data-theme="dark"] {
+    --editor-background: #1a1a1a;
+    --line-numbers-background: #2d2d2d;
+    --line-numbers-text: #858585;
+    --editor-text: #e6e6e6;
+    --editor-text-secondary: #858585;
+    --editor-placeholder: #666666;
+    --scrollbar-track: #2d2d2d;
+    --scrollbar-thumb: #4d4d4d;
+    --scrollbar-thumb-hover: #666666;
+}
+
+// Syntax highlighting for different languages
+.codeTextarea[data-language="cpp"] {
+    // C++ specific styles can be added here
+}
+
+.codeTextarea[data-language="python"] {
+    // Python specific styles can be added here
+}
+
+.codeTextarea[data-language="javascript"] {
+    // JavaScript specific styles can be added here
+}
+
+.codeTextarea[data-language="java"] {
+    // Java specific styles can be added here
+}
+
+// Focus state
+.codeTextarea:focus {
+    background-color: var(--editor-background);
+}
+
+// Selection styling
+.codeTextarea::selection {
+    background-color: var(--selection-background);
+    color: var(--selection-text);
+}
+
+:root {
+    --selection-background: #b3d4fc;
+    --selection-text: #000000;
+}
+
+[data-theme="dark"] {
+    --selection-background: #264f78;
+    --selection-text: #ffffff;
+}
+

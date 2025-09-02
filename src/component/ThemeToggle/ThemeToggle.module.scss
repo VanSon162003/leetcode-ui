@@ -1,0 +1,21 @@
+.themeToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: map-get($spacing, 2);
+    border-radius: map-get($border-radius, full);
+    background-color: var(--background-secondary);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: 1px solid var(--border-primary);
+
+    &:hover {
+        background-color: var(--background-hover);
+    }
+
+    .icon {
+        width: 20px;
+        height: 20px;
+        color: var(--text-primary);
+    }
+}

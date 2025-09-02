@@ -1,0 +1,153 @@
+.problemItem {
+    display: grid;
+    grid-template-columns: 80px 1fr 120px 100px 100px;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-primary);
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--background-hover);
+    }
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    @media (max-width: 767px) {
+        grid-template-columns: 60px 1fr 80px 80px 80px;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+    }
+}
+
+.statusCell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.solvedIcon {
+    color: var(--difficulty-easy);
+    font-size: 0.875rem;
+    background-color: var(--difficulty-easy);
+    color: var(--text-white);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.titleCell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.problemNumber {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.problemTitle {
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.problemTitle:hover {
+    color: var(--text-link);
+}
+
+.acceptanceCell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.acceptance {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.difficultyCell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.difficulty {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.difficulty.easy {
+    color: var(--difficulty-easy);
+}
+
+.difficulty.medium {
+    color: var(--difficulty-medium);
+}
+
+.difficulty.hard {
+    color: var(--difficulty-hard);
+}
+
+.frequencyCell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.frequencyBars {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+.bar {
+    width: 3px;
+    height: 12px;
+    background-color: var(--border-primary);
+    border-radius: 1px;
+
+    &:nth-child(1),
+    &:nth-child(2) {
+        background-color: var(--text-tertiary);
+    }
+
+    &:nth-child(3) {
+        background-color: var(--text-tertiary);
+        opacity: 0.6;
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 639px) {
+    .problemItem {
+        grid-template-columns: 40px 1fr 60px;
+        gap: 0.5rem;
+    }
+
+    .acceptanceCell,
+    .frequencyCell {
+        display: none;
+    }
+
+    .difficultyCell {
+        grid-column: 3;
+    }
+}

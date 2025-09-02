@@ -1,0 +1,20 @@
+.themeToggle {
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        background-color: var(--background-hover);
+    }
+}
+
+.icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--text-primary);
+}

@@ -1,0 +1,162 @@
+// Z-index
+$z-index: (
+    sticky: 100,
+    modal: 1000,
+    overlay: 999,
+    dropdown: 50,
+    tooltip: 75,
+);
+
+// Breakpoints
+$breakpoints: (
+    sm: 640px,
+    md: 768px,
+    lg: 1024px,
+    xl: 1280px,
+    2xl: 1536px,
+);
+
+// Font Sizes
+$font-sizes: (
+    xs: 0.75rem,
+    // 12px
+    sm: 0.875rem,
+    // 14px
+    base: 1rem,
+    // 16px
+    lg: 1.125rem,
+    // 18px
+    xl: 1.25rem,
+    // 20px
+    2xl: 1.5rem,
+    // 24px
+    3xl: 1.875rem,
+    // 30px
+    4xl: 2.25rem,
+    // 36px
+    5xl: 3rem,
+    // 48px
+);
+
+// Font Weights
+$font-weights: (
+    thin: 100,
+    extralight: 200,
+    light: 300,
+    regular: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
+    extrabold: 800,
+    black: 900,
+);
+
+// Spacing
+$spacing: (
+    1: 0.25rem,
+    2: 0.5rem,
+    3: 0.75rem,
+    4: 1rem,
+    5: 1.25rem,
+    6: 1.5rem,
+    8: 2rem,
+    10: 2.5rem,
+    12: 3rem,
+    16: 4rem,
+);
+
+// Media Queries
+@mixin respond-to($breakpoint) {
+    @if $breakpoint == sm {
+        @media (min-width: 640px) {
+            @content;
+        }
+    } @else if $breakpoint == md {
+        @media (min-width: 768px) {
+            @content;
+        }
+    } @else if $breakpoint == lg {
+        @media (min-width: 1024px) {
+            @content;
+        }
+    } @else if $breakpoint == xl {
+        @media (min-width: 1280px) {
+            @content;
+        }
+    } @else if $breakpoint == 2xl {
+        @media (min-width: 1536px) {
+            @content;
+        }
+    }
+}
+
+// Flexbox Utilities
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+// Colors
+:root {
+    // Brand Colors
+    --primary-orange: #ffa116;
+    --primary-orange-hover: #ff8c00;
+    --primary-blue: #007acc;
+    --primary-green: #00af9b;
+    --primary-purple: #8b5cf6;
+}
+
+:root[data-theme="light"] {
+    // Background Colors
+    --background-primary: #ffffff;
+    --background-secondary: #f8f9fa;
+    --background-tertiary: #f1f2f3;
+    --background-card: #ffffff;
+    --background-hover: #f5f5f5;
+
+    // Text Colors
+    --text-primary: #2c3e50;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+
+    // Border Colors
+    --border-color: #e2e8f0;
+    --border-primary: #cbd5e1;
+
+    // Shadow
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="dark"] {
+    // Background Colors
+    --background-primary: #1a1b1e;
+    --background-secondary: #25262b;
+    --background-tertiary: #2c2d32;
+    --background-card: #2c2d32;
+    --background-hover: #32333a;
+
+    // Text Colors
+    --text-primary: #e2e8f0;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+
+    // Border Colors
+    --border-color: #2e2e35;
+    --border-primary: #3d3d46;
+
+    // Shadow
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}

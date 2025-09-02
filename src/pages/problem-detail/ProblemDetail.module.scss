@@ -1,0 +1,375 @@
+.problemDetail {
+    min-height: 100vh;
+    background-color: var(--background);
+    color: var(--text);
+}
+
+.mainContent {
+    display: flex;
+    height: calc(100vh - 120px); // Adjust based on header/footer height
+    margin-top: 60px; // Header height
+}
+
+// Left Panel - Problem Description
+.leftPanel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+    background-color: var(--background);
+    overflow-y: auto;
+}
+
+.problemHeader {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    background-color: var(--background);
+}
+
+.navigation {
+    margin-bottom: 16px;
+}
+
+.navButton {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 8px 0;
+    transition: color 0.2s;
+    
+    &:hover {
+        color: var(--text);
+    }
+}
+
+.problemInfo {
+    .problemTitle {
+        font-size: 28px;
+        font-weight: 600;
+        margin: 0 0 12px 0;
+        color: var(--text);
+    }
+    
+    .problemMeta {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+        
+        .difficulty {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            
+            &.easy {
+                background-color: #00b8a3;
+                color: white;
+            }
+            
+            &.medium {
+                background-color: #ffc01e;
+                color: #000;
+            }
+            
+            &.hard {
+                background-color: #ff375f;
+                color: white;
+            }
+        }
+        
+        .acceptance,
+        .submissions {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+    }
+}
+
+.problemTabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    background-color: var(--background);
+    
+    .tab {
+        background: none;
+        border: none;
+        padding: 16px 24px;
+        font-size: 14px;
+        color: var(--text-secondary);
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+        
+        &:hover {
+            color: var(--text);
+        }
+        
+        &.active {
+            color: var(--text);
+            border-bottom-color: var(--primary);
+        }
+    }
+}
+
+.problemContent {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.problemFooter {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    background-color: var(--background);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .interactions {
+        display: flex;
+        gap: 16px;
+        
+        .interactionBtn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            
+            &:hover {
+                background-color: var(--hover);
+                color: var(--text);
+            }
+        }
+    }
+    
+    .onlineUsers {
+        font-size: 12px;
+        color: var(--text-secondary);
+    }
+}
+
+// Right Panel - Code Editor
+.rightPanel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background);
+    border-left: 1px solid var(--border);
+}
+
+.editorHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    background-color: var(--background);
+    
+    .editorTabs {
+        display: flex;
+        gap: 0;
+        
+        .editorTab {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            
+            &:hover {
+                color: var(--text);
+            }
+            
+            &.active {
+                color: var(--text);
+                border-bottom-color: var(--primary);
+            }
+        }
+    }
+    
+    .editorControls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        
+        .languageSelect {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background-color: var(--background);
+            color: var(--text);
+            font-size: 14px;
+            cursor: pointer;
+            
+            &:focus {
+                outline: none;
+                border-color: var(--primary);
+            }
+        }
+        
+        .controlBtn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            
+            &:hover {
+                background-color: var(--hover);
+                color: var(--text);
+            }
+        }
+    }
+}
+
+.editorContent {
+    flex: 1;
+    overflow: hidden;
+}
+
+.testRunnerContainer {
+    height: 100%;
+    overflow: hidden;
+}
+
+.editorFooter {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    background-color: var(--background);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .status {
+        font-size: 14px;
+        color: var(--text-secondary);
+    }
+    
+    .actions {
+        display: flex;
+        gap: 12px;
+        
+        .actionBtn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            
+            &:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+            
+            &.runBtn {
+                background-color: var(--secondary);
+                color: var(--text);
+                
+                &:hover:not(:disabled) {
+                    background-color: var(--secondary-hover);
+                }
+            }
+            
+            &.submitBtn {
+                background-color: var(--success);
+                color: white;
+                
+                &:hover:not(:disabled) {
+                    background-color: var(--success-hover);
+                }
+                
+                &.success {
+                    background-color: #22c55e;
+                    animation: pulse 2s infinite;
+                }
+            }
+        }
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+    }
+}
+
+// Responsive Design
+@media (max-width: 1200px) {
+    .mainContent {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .leftPanel,
+    .rightPanel {
+        flex: none;
+        width: 100%;
+    }
+    
+    .leftPanel {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        max-height: 50vh;
+    }
+}
+
+@media (max-width: 768px) {
+    .problemHeader {
+        padding: 16px;
+    }
+    
+    .problemContent {
+        padding: 16px;
+    }
+    
+    .problemFooter {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .editorHeader {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .editorFooter {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .problemTitle {
+        font-size: 24px;
+    }
+    
+    .problemMeta {
+        gap: 12px;
+    }
+}
+
