@@ -1,18 +1,22 @@
 import React, { useState, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faCheck, faTimes, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faCheck, faTimes, faSpinner, faServer, faDesktop } from '@fortawesome/free-solid-svg-icons';
 import styles from './TestRunner.module.scss';
+import { apiService } from '../../services/api.js';
+import { useAuth } from '../../hooks/useAuth';
+import CodeValidator from '../CodeValidator';
 
 const TestRunner = ({ problem, userCode, onTestComplete }) => {
+    const { user, isAuthenticated } = useAuth();
     const [testResults, setTestResults] = useState([]);
     const [isRunning, setIsRunning] = useState(false);
     const [allTestsPassed, setAllTestsPassed] = useState(false);
+    const [useBackendValidation, setUseBackendValidation] = useState(true);
 
     // Safe evaluation function
     const safeEvaluate = useCallback((code, testCase) => {
         try {
             // Create a safe execution environment
-            // eslint-disable-next-line no-new-func
             const func = new Function('return ' + code)();
             
             // Handle different function signatures
@@ -90,6 +94,63 @@ const TestRunner = ({ problem, userCode, onTestComplete }) => {
         return false;
     };
 
+    // Format values for clearer, compact display where appropriate
+    const isPrimitive = (v) => (
+        v === null || typeof v === 'number' || typeof v === 'string' || typeof v === 'boolean'
+    );
+
+    const canRenderInline = (value) => {
+        if (Array.isArray(value)) {
+            // Inline if array of primitives and short
+            if (value.every(isPrimitive)) {
+                const inline = `[${value.join(', ')}]`;
+                return inline.length <= 60;
+            }
+            return false;
+        }
+        if (isPrimitive(value)) {
+            return String(value).length <= 60;
+        }
+        // Compact object if shallow and small
+        if (typeof value === 'object') {
+            const keys = Object.keys(value);
+            if (keys.length <= 4 && keys.every(k => isPrimitive(value[k]) || Array.isArray(value[k]))) {
+                const parts = keys.map(k => {
+                    const v = value[k];
+                    if (Array.isArray(v) && v.every(isPrimitive)) return `"${k}": [${v.join(', ')}]`;
+                    if (isPrimitive(v)) return `"${k}": ${typeof v === 'string' ? '"' + v + '"' : v}`;
+                    return `"${k}": ${JSON.stringify(v)}`;
+                });
+                const inline = `{ ${parts.join(', ')} }`;
+                return inline.length <= 80;
+            }
+        }
+        return false;
+    };
+
+    const formatValue = (value) => {
+        if (Array.isArray(value) && value.every(isPrimitive)) {
+            return `[${value.join(', ')}]`;
+        }
+        if (isPrimitive(value)) {
+            return String(value);
+        }
+        // Try produce compact one-line for shallow objects
+        if (typeof value === 'object' && value !== null) {
+            const keys = Object.keys(value);
+            if (keys.length <= 4 && keys.every(k => isPrimitive(value[k]) || Array.isArray(value[k]))) {
+                const parts = keys.map(k => {
+                    const v = value[k];
+                    if (Array.isArray(v) && v.every(isPrimitive)) return `"${k}": [${v.join(', ')}]`;
+                    if (isPrimitive(v)) return `"${k}": ${typeof v === 'string' ? '"' + v + '"' : v}`;
+                    return `"${k}": ${JSON.stringify(v)}`;
+                });
+                return `{ ${parts.join(', ')} }`;
+            }
+        }
+        return JSON.stringify(value, null, 2);
+    };
+
     const runTests = async () => {
         if (!userCode.trim()) {
             if (typeof window !== 'undefined') {
@@ -145,6 +206,22 @@ const TestRunner = ({ problem, userCode, onTestComplete }) => {
         setAllTestsPassed(passedCount === problem.testCases.length);
         setIsRunning(false);
 
+        // Save progress to database if user is authenticated
+        if (isAuthenticated && user?.id) {
+            try {
+                const submissionResult = {
+                    status: passedCount === problem.testCases.length ? 'Accepted' : 'Wrong Answer',
+                    executionTime: Math.floor(Math.random() * 100) + 10, // Mock execution time
+                    memoryUsed: Math.floor(Math.random() * 1000) + 100, // Mock memory usage
+                    score: Math.round((passedCount / problem.testCases.length) * 100)
+                };
+
+                await apiService.updateProblemProgress(user.id, problem.id, submissionResult);
+            } catch (error) {
+                console.warn('Failed to save problem progress:', error);
+            }
+        }
+
         // Notify parent component
         if (onTestComplete) {
             onTestComplete({
@@ -183,23 +260,43 @@ const TestRunner = ({ problem, userCode, onTestComplete }) => {
         <div className={styles.testRunner}>
             <div className={styles.header}>
                 <h3>Test Cases</h3>
-                <button 
-                    className={styles.runButton}
-                    onClick={runTests}
-                    disabled={isRunning}
-                >
-                    {isRunning ? (
-                        <>
-                            <FontAwesomeIcon icon={faSpinner} className={styles.spinning} />
-                            Running...
-                        </>
-                    ) : (
-                        <>
-                            <FontAwesomeIcon icon={faPlay} />
-                            Run Tests
-                        </>
+                <div className={styles.controls}>
+                    <div className={styles.validationToggle}>
+                        <button
+                            className={`${styles.toggleButton} ${useBackendValidation ? styles.active : ''}`}
+                            onClick={() => setUseBackendValidation(true)}
+                        >
+                            <FontAwesomeIcon icon={faServer} />
+                            Backend
+                        </button>
+                        <button
+                            className={`${styles.toggleButton} ${!useBackendValidation ? styles.active : ''}`}
+                            onClick={() => setUseBackendValidation(false)}
+                        >
+                            <FontAwesomeIcon icon={faDesktop} />
+                            Local
+                        </button>
+                    </div>
+                    {!useBackendValidation && (
+                        <button 
+                            className={styles.runButton}
+                            onClick={runTests}
+                            disabled={isRunning}
+                        >
+                            {isRunning ? (
+                                <>
+                                    <FontAwesomeIcon icon={faSpinner} className={styles.spinning} />
+                                    Running...
+                                </>
+                            ) : (
+                                <>
+                                    <FontAwesomeIcon icon={faPlay} />
+                                    Run Tests
+                                </>
+                            )}
+                        </button>
                     )}
-                </button>
+                </div>
             </div>
 
             {testResults.length > 0 && (
@@ -246,12 +343,20 @@ const TestRunner = ({ problem, userCode, onTestComplete }) => {
                         <div className={styles.testDetails}>
                             <div className={styles.testInput}>
                                 <strong>Input:</strong>
-                                <pre>{JSON.stringify(result.input, null, 2)}</pre>
+                                {canRenderInline(result.input) ? (
+                                    <code className={styles.inlineCode}>{formatValue(result.input)}</code>
+                                ) : (
+                                    <pre>{JSON.stringify(result.input, null, 2)}</pre>
+                                )}
                             </div>
                             
                             <div className={styles.testExpected}>
                                 <strong>Expected:</strong>
-                                <pre>{JSON.stringify(result.expected, null, 2)}</pre>
+                                {canRenderInline(result.expected) ? (
+                                    <code className={styles.inlineCode}>{formatValue(result.expected)}</code>
+                                ) : (
+                                    <pre>{JSON.stringify(result.expected, null, 2)}</pre>
+                                )}
                             </div>
                             
                             {result.error ? (
@@ -262,7 +367,11 @@ const TestRunner = ({ problem, userCode, onTestComplete }) => {
                             ) : (
                                 <div className={styles.testActual}>
                                     <strong>Actual:</strong>
-                                    <pre>{JSON.stringify(result.actual, null, 2)}</pre>
+                                    {canRenderInline(result.actual) ? (
+                                        <code className={styles.inlineCode}>{formatValue(result.actual)}</code>
+                                    ) : (
+                                        <pre>{JSON.stringify(result.actual, null, 2)}</pre>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -270,10 +379,18 @@ const TestRunner = ({ problem, userCode, onTestComplete }) => {
                 ))}
             </div>
 
-            {testResults.length === 0 && !isRunning && (
+            {testResults.length === 0 && !isRunning && !useBackendValidation && (
                 <div className={styles.noTests}>
                     <p>Click "Run Tests" to execute your solution against all test cases.</p>
                 </div>
+            )}
+
+            {useBackendValidation && (
+                <CodeValidator
+                    problem={problem}
+                    userCode={userCode}
+                    onValidationComplete={onTestComplete}
+                />
             )}
         </div>
     );

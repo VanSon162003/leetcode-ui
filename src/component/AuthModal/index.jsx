@@ -7,7 +7,7 @@ import {
     faGoogle as faGoogleBrand,
     faGithub as faGithubBrand,
 } from "@fortawesome/free-brands-svg-icons";
-import { useAuth } from "../../hooks/use-auth";
+import { useAuth } from "../../hooks/useAuth";
 import styles from "./AuthModal.module.scss";
 
 const AuthModal = ({ isOpen, onClose, initialMode = "login" }) => {
@@ -22,13 +22,17 @@ const AuthModal = ({ isOpen, onClose, initialMode = "login" }) => {
         username: "",
     });
     const [errors, setErrors] = useState({});
+    const [successMessage, setSuccessMessage] = useState("");
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
-        // Clear error when user starts typing
+        // Clear error and success message when user starts typing
         if (errors[name]) {
             setErrors((prev) => ({ ...prev, [name]: "" }));
+        }
+        if (successMessage) {
+            setSuccessMessage("");
         }
     };
 
@@ -71,18 +75,40 @@ const AuthModal = ({ isOpen, onClose, initialMode = "login" }) => {
         if (!validateForm()) return;
 
         setLoading(true);
+        setErrors({});
+        setSuccessMessage("");
 
         try {
+            let result;
             if (mode === "login") {
-                await login(formData.email, formData.password);
+                result = await login({
+                    email: formData.email,
+                    password: formData.password
+                });
             } else {
-                await register(
-                    formData.email,
-                    formData.password,
-                    formData.username
-                );
+                result = await register({
+                    email: formData.email,
+                    password: formData.password,
+                    username: formData.username
+                });
             }
-            onClose();
+
+            if (result.success) {
+                setSuccessMessage(result.message);
+                // Close modal after a short delay to show success message
+                setTimeout(() => {
+                    onClose();
+                    setFormData({
+                        email: "",
+                        password: "",
+                        confirmPassword: "",
+                        username: "",
+                    });
+                    setSuccessMessage("");
+                }, 1500);
+            } else {
+                setErrors({ general: result.message });
+            }
         } catch {
             setErrors({ general: "Authentication failed. Please try again." });
         } finally {
@@ -127,6 +153,10 @@ const AuthModal = ({ isOpen, onClose, initialMode = "login" }) => {
 
                 {errors.general && (
                     <div className={styles.errorMessage}>{errors.general}</div>
+                )}
+
+                {successMessage && (
+                    <div className={styles.successMessage}>{successMessage}</div>
                 )}
 
                 <form onSubmit={handleSubmit} className={styles.form}>

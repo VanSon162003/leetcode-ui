@@ -3,7 +3,7 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons"
 import styles from "./ProblemItem.module.scss"
 
 const ProblemItem = ({ problem }) => {
-  const { id, title, difficulty, acceptance, status } = problem
+  const { id, title, difficulty, acceptance, userStatus } = problem
 
   const getDifficultyClass = (difficulty) => {
     switch (difficulty.toLowerCase()) {
@@ -19,7 +19,7 @@ const ProblemItem = ({ problem }) => {
   }
 
   const getStatusIcon = () => {
-    if (status === "solved") {
+    if (userStatus === "Completed") {
       return <FontAwesomeIcon icon={faCheck} className={styles.solvedIcon} />
     }
     return null

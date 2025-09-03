@@ -1,12 +1,17 @@
 import { faSearch, faSort } from "@fortawesome/free-solid-svg-icons";
 import ProblemItem from "../ProblemItem";
 import styles from "./ProblemList.module.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { mockProblems } from "../../data/mockProblems";
+import { apiService } from "../../services/api.js";
+import { useAuth } from "../../hooks/useAuth";
 
 const ProblemList = () => {
-    const [problems] = useState(mockProblems);
+    const { user, isAuthenticated } = useAuth();
+    const [problems, setProblems] = useState([]);
+    const [userProblems, setUserProblems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [filters, setFilters] = useState({
         difficulty: "All",
         status: "All",
@@ -14,6 +19,38 @@ const ProblemList = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState("id");
     const [sortOrder, setSortOrder] = useState("asc");
+
+    // Load problems and user progress
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+
+                // Load problems
+                const problemsResponse = await apiService.getProblems();
+                setProblems(problemsResponse.problems || []);
+
+                // Load user problems if authenticated
+                if (isAuthenticated && user?.id) {
+                    try {
+                        const userProblemsResponse = await apiService.getUserProblems(user.id);
+                        setUserProblems(userProblemsResponse.rows || []);
+                    } catch (userError) {
+                        console.warn("Failed to load user problems:", userError);
+                        // Don't set error for user problems, just continue without them
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to load problems:", err);
+                setError("Failed to load problems. Please try again.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadData();
+    }, [isAuthenticated, user?.id]);
 
     const handleFilterChange = (filterType, value) => {
         setFilters((prev) => ({
@@ -31,7 +68,17 @@ const ProblemList = () => {
         }
     };
 
+    // Helper function to get user problem status
+    const getUserProblemStatus = (problemId) => {
+        const userProblem = userProblems.find(up => up.problemId === problemId);
+        return userProblem ? userProblem.status : 'Not Started';
+    };
+
     const filteredAndSortedProblems = problems
+        .map(problem => ({
+            ...problem,
+            userStatus: getUserProblemStatus(problem.id)
+        }))
         .filter((problem) => {
             const matchesSearch = problem.title
                 .toLowerCase()
@@ -41,8 +88,8 @@ const ProblemList = () => {
                 problem.difficulty === filters.difficulty;
             const matchesStatus =
                 filters.status === "All" ||
-                (filters.status === "Solved" && problem.status === "solved") ||
-                (filters.status === "Unsolved" && !problem.status);
+                (filters.status === "Solved" && problem.userStatus === "Completed") ||
+                (filters.status === "Unsolved" && problem.userStatus !== "Completed");
             return matchesSearch && matchesDifficulty && matchesStatus;
         })
         .sort((a, b) => {
@@ -108,7 +155,7 @@ const ProblemList = () => {
 
                 <div className={styles.stats}>
                     <span className={styles.statText}>
-                        {filteredAndSortedProblems.length}/{problems.length}{" "}
+                        {userProblems.filter(up => up.status === 'Completed').length}/{problems.length}{" "}
                         Solved
                     </span>
                 </div>
@@ -161,7 +208,18 @@ const ProblemList = () => {
 
             {/* Problem List */}
             <div className={styles.problemList}>
-                {filteredAndSortedProblems.length > 0 ? (
+                {loading ? (
+                    <div className={styles.loadingState}>
+                        <p>Loading problems...</p>
+                    </div>
+                ) : error ? (
+                    <div className={styles.errorState}>
+                        <p>{error}</p>
+                        <button onClick={() => window.location.reload()}>
+                            Retry
+                        </button>
+                    </div>
+                ) : filteredAndSortedProblems.length > 0 ? (
                     filteredAndSortedProblems.map((problem) => (
                         <ProblemItem key={problem.id} problem={problem} />
                     ))

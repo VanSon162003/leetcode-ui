@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api"
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api"
 
 class ApiService {
   constructor() {
@@ -45,11 +45,17 @@ class ApiService {
     return this.request(`/problems/${id}`)
   }
 
-  async updateProblemStatus(id, status) {
-    return this.request(`/problems/${id}/status`, {
-      method: "PATCH",
-      body: JSON.stringify({ status }),
-    })
+  async getProblemBySlug(slug) {
+    return this.request(`/problems/slug/${slug}`)
+  }
+
+  // Categories API
+  async getCategories() {
+    return this.request("/categories")
+  }
+
+  async getCategory(id) {
+    return this.request(`/categories/${id}`)
   }
 
   // Courses API
@@ -65,21 +71,48 @@ class ApiService {
 
   // User API
   async getUserProfile() {
-    return this.request("/user/profile")
+    return this.request("/auth/profile")
   }
 
   async updateUserProfile(updates) {
-    return this.request("/user/profile", {
-      method: "PATCH",
+    return this.request("/auth/profile", {
+      method: "PUT",
       body: JSON.stringify(updates),
     })
   }
 
-  async updateUserPreferences(preferences) {
-    return this.request("/user/preferences", {
-      method: "PATCH",
-      body: JSON.stringify(preferences),
+  async changePassword(passwordData) {
+    return this.request("/auth/change-password", {
+      method: "PUT",
+      body: JSON.stringify(passwordData),
     })
+  }
+
+  // User Problems API
+  async getUserProblems(userId, params = {}) {
+    const queryString = new URLSearchParams(params).toString()
+    return this.request(`/user-problems/${userId}${queryString ? `?${queryString}` : ""}`)
+  }
+
+  async getUserProblem(userId, problemId) {
+    return this.request(`/user-problems/${userId}/${problemId}`)
+  }
+
+  async startProblem(userId, problemId) {
+    return this.request(`/user-problems/${userId}/${problemId}/start`, {
+      method: "POST",
+    })
+  }
+
+  async updateProblemProgress(userId, problemId, submissionResult) {
+    return this.request(`/user-problems/${userId}/${problemId}/progress`, {
+      method: "PUT",
+      body: JSON.stringify(submissionResult),
+    })
+  }
+
+  async getUserStats(userId) {
+    return this.request(`/user-problems/${userId}/stats`)
   }
 
   // Authentication API
@@ -101,6 +134,33 @@ class ApiService {
     return this.request("/auth/logout", {
       method: "POST",
     })
+  }
+
+  // Submission API
+  async submitCode(submissionData) {
+    return this.request("/submissions/", {
+      method: "POST",
+      body: JSON.stringify(submissionData),
+    })
+  }
+
+  async validateCode(validationData) {
+    return this.request("/submissions/validate", {
+      method: "POST",
+      body: JSON.stringify(validationData),
+    })
+  }
+
+  async getSubmissionResult(token) {
+    return this.request(`/submissions/${token}`)
+  }
+
+  async getSupportedLanguages() {
+    return this.request("/submissions/languages")
+  }
+
+  async checkJudge0Health() {
+    return this.request("/submissions/health/judge0")
   }
 }
 

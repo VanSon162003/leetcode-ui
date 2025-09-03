@@ -7,6 +7,14 @@ import Footer from "../../layout/Footer";
 import { useTheme } from "../../contexts/use-theme";
 import ROUTES from "../../configs/routes";
 import styles from "./Problems.module.scss";
+import {
+    Select,
+    SelectTrigger,
+    SelectValue,
+    SelectContent,
+    SelectItem,
+    SelectSeparator
+} from "../../components/ui/select";
 
 const Problems = () => {
     const { theme: _theme } = useTheme();
@@ -159,11 +167,12 @@ const Problems = () => {
                 aValue = a.title.toLowerCase();
                 bValue = b.title.toLowerCase();
                 break;
-            case "difficulty":
+            case "difficulty": {
                 const difficultyOrder = { "Easy": 1, "Medium": 2, "Hard": 3 };
                 aValue = difficultyOrder[a.difficulty];
                 bValue = difficultyOrder[b.difficulty];
                 break;
+            }
             case "acceptance":
                 aValue = parseFloat(a.acceptance);
                 bValue = parseFloat(b.acceptance);
@@ -274,38 +283,44 @@ const Problems = () => {
                         </div>
                         
                         <div className={styles.filterOptions}>
-                            <select
-                                value={filters.difficulty}
-                                onChange={(e) => setFilters({ ...filters, difficulty: e.target.value })}
-                                className={styles.filterSelect}
-                            >
-                                <option value="All">All Difficulties</option>
-                                <option value="Easy">Easy</option>
-                                <option value="Medium">Medium</option>
-                                <option value="Hard">Hard</option>
-                            </select>
-                            
-                            <select
-                                value={filters.status}
-                                onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                                className={styles.filterSelect}
-                            >
-                                <option value="All">All Status</option>
-                                <option value="Solved">Solved</option>
-                                <option value="Attempted">Attempted</option>
-                                <option value="Not Attempted">Not Attempted</option>
-                            </select>
+                            <Select value={filters.difficulty} onValueChange={(v) => setFilters({ ...filters, difficulty: v })}>
+                                <SelectTrigger className={styles.filterSelect}>
+                                    <SelectValue placeholder="All Difficulties" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="All">All Difficulties</SelectItem>
+                                    <SelectSeparator />
+                                    <SelectItem value="Easy">Easy</SelectItem>
+                                    <SelectItem value="Medium">Medium</SelectItem>
+                                    <SelectItem value="Hard">Hard</SelectItem>
+                                </SelectContent>
+                            </Select>
 
-                            <select
-                                value={filters.topic}
-                                onChange={(e) => setFilters({ ...filters, topic: e.target.value })}
-                                className={styles.filterSelect}
-                            >
-                                <option value="All">All Topics</option>
-                                {allTopics.map(topic => (
-                                    <option key={topic} value={topic}>{topic}</option>
-                                ))}
-                            </select>
+                            <Select value={filters.status} onValueChange={(v) => setFilters({ ...filters, status: v })}>
+                                <SelectTrigger className={styles.filterSelect}>
+                                    <SelectValue placeholder="All Status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="All">All Status</SelectItem>
+                                    <SelectSeparator />
+                                    <SelectItem value="Solved">Solved</SelectItem>
+                                    <SelectItem value="Attempted">Attempted</SelectItem>
+                                    <SelectItem value="Not Attempted">Not Attempted</SelectItem>
+                                </SelectContent>
+                            </Select>
+
+                            <Select value={filters.topic} onValueChange={(v) => setFilters({ ...filters, topic: v })}>
+                                <SelectTrigger className={styles.filterSelect}>
+                                    <SelectValue placeholder="All Topics" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="All">All Topics</SelectItem>
+                                    <SelectSeparator />
+                                    {allTopics.map(topic => (
+                                        <SelectItem key={topic} value={topic}>{topic}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
 

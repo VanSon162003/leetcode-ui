@@ -10,16 +10,18 @@ import TestRunner from "../../components/TestRunner/TestRunner";
 import { useTheme } from "../../contexts/use-theme";
 import { mockProblemDetails } from "../../data/mockProblemDetails";
 import styles from "./ProblemDetail.module.scss";
+import {
+    Select,
+    SelectTrigger,
+    SelectValue,
+    SelectContent,
+    SelectItem
+} from "../../components/ui/select";
 
 const ProblemDetail = () => {
     const { slug } = useParams();
     const navigate = useNavigate();
     const { theme } = useTheme();
-    
-    // Check if we're in browser environment
-    if (typeof window === 'undefined') {
-        return <div>Loading...</div>;
-    }
     
     // State management
     const [problem, setProblem] = useState(null);
@@ -34,7 +36,7 @@ const ProblemDetail = () => {
     const [activeCodeTab, setActiveCodeTab] = useState("code"); // code, testcase, result
     const [showTestResult, setShowTestResult] = useState(false);
     const [testResult, setTestResult] = useState(null);
-    const [testResults, setTestResults] = useState(null);
+    const [_testResults, setTestResults] = useState(null);
     const [allTestsPassed, setAllTestsPassed] = useState(false);
 
     // Get problem data from mock data
@@ -73,6 +75,14 @@ public:
         { id: "java", name: "Java", extension: "java" },
         { id: "cpp", name: "C++17", extension: "cpp" }
     ];
+
+    // Map UI language codes to Judge0 numeric language IDs
+    const languageIdMap = {
+        javascript: 63,
+        python: 71,
+        java: 62,
+        cpp: 54
+    };
 
     useEffect(() => {
         // Set problem data
@@ -153,7 +163,7 @@ public:
                 },
                 body: JSON.stringify({
                     source_code: code,
-                    language_id: selectedLanguage,
+                    language_id: languageIdMap[selectedLanguage],
                     stdin: customInput,
                     problemId: slug
                 })
@@ -199,7 +209,7 @@ public:
                 },
                 body: JSON.stringify({
                     source_code: code,
-                    language_id: selectedLanguage,
+                    language_id: languageIdMap[selectedLanguage],
                     testCases: [
                         { input: "2 7 11 15\n9", output: "0 1" },
                         { input: "3 2 4\n6", output: "1 2" },
@@ -401,17 +411,16 @@ public:
                         </div>
                         
                         <div className={styles.editorControls}>
-                            <select 
-                                value={selectedLanguage}
-                                onChange={(e) => handleLanguageChange(parseInt(e.target.value))}
-                                className={styles.languageSelect}
-                            >
-                                {languages.map(lang => (
-                                    <option key={lang.id} value={lang.id}>
-                                        {lang.name}
-                                    </option>
-                                ))}
-                            </select>
+                            <Select value={selectedLanguage} onValueChange={handleLanguageChange}>
+                                <SelectTrigger className={styles.languageSelect}>
+                                    <SelectValue placeholder="Language" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {languages.map(lang => (
+                                        <SelectItem key={lang.id} value={lang.id}>{lang.name}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                             
                             <button className={styles.controlBtn}>
                                 <span>🔒</span>
