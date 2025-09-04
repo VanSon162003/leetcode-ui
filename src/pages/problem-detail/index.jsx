@@ -23,12 +23,7 @@ const ProblemDetail = () => {
     const navigate = useNavigate();
     const { theme } = useTheme();
     
-    // Check if we're in browser environment
-    if (typeof window === 'undefined') {
-        return <div>Loading...</div>;
-    }
-    
-    // State management
+    // State management - must be at top level
     const [problem, setProblem] = useState(null);
     const [selectedLanguage, setSelectedLanguage] = useState("javascript"); // JavaScript default
     const [code, setCode] = useState("");
@@ -41,7 +36,7 @@ const ProblemDetail = () => {
     const [activeCodeTab, setActiveCodeTab] = useState("code"); // code, testcase, result
     const [showTestResult, setShowTestResult] = useState(false);
     const [testResult, setTestResult] = useState(null);
-    const [testResults, setTestResults] = useState(null);
+    const [, setTestResults] = useState(null);
     const [allTestsPassed, setAllTestsPassed] = useState(false);
 
     // Get problem data from mock data
@@ -98,6 +93,11 @@ public:
             setCode(defaultCodeTemplates[selectedLanguage]);
         }
     }, [slug, selectedLanguage, defaultCodeTemplates, currentProblem]);
+
+    // Check if we're in browser environment after all hooks
+    if (typeof window === 'undefined') {
+        return <div>Loading...</div>;
+    }
 
     // Handle language change
     const handleLanguageChange = (languageId) => {
