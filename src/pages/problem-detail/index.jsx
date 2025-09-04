@@ -130,7 +130,7 @@ public:
     const waitForSubmissionCompletion = async (token, maxAttempts = 10) => {
         for (let attempt = 1; attempt <= maxAttempts; attempt++) {
             try {
-                const response = await fetch(`http://localhost:5000/api/submissions/${token}`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}submissions/${token}`);
                 const result = await response.json();
                 
                 if (result.success && result.data.status !== 'In Queue' && result.data.status !== 'Processing') {
@@ -163,7 +163,7 @@ public:
         try {
             if (typeof window === 'undefined') return;
             
-            const response = await fetch('http://localhost:5000/api/submissions', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/submissions`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -209,7 +209,7 @@ public:
         try {
             if (typeof window === 'undefined') return;
             
-            const response = await fetch('http://localhost:5000/api/submissions/test-cases', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}submissions/test-cases`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
